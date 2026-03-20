@@ -51,17 +51,21 @@ async function getProposalVoteReceipts(
   }));
 
   const proposalsComputation = await evaluate(join([
-    knownGovernanceContracts(network).map(contract => pull1({
-      allProposals: {
-        apiHost,
-        nodeHost,
-        nodeKey,
-        network,
-        contract,
-        quorum:      Constant.quorumVotes,
-        blockNumber: latestBlock.number,
-      },
-    })),
+    knownGovernanceContracts(network)
+      .filter(({ creation }) => {
+        return creation.block.number <= latestBlock.number;
+      })
+      .map(contract => pull1({
+        allProposals: {
+          apiHost,
+          nodeHost,
+          nodeKey,
+          network,
+          contract,
+          quorum:      Constant.quorumVotes,
+          blockNumber: latestBlock.number,
+        },
+      })),
     proposalsByContract => proposalsByContract.flat(),
   ]));
 

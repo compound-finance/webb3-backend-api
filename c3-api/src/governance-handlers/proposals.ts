@@ -23,6 +23,7 @@ import type { Context } from './handlers.js';
 const knownGovernanceContracts = (network: Extract<KnownNetwork.Name, `ethereum-${'mainnet'}`>) => [
   Eth.wellKnownContractsByNetwork[network]['GovernorAlpha']['default'],
   Eth.wellKnownContractsByNetwork[network]['GovernorBravo']['default'],
+  Eth.wellKnownContractsByNetwork[network]['GovernorCharlie']['default'],
 ];
 
 async function getProposals(
@@ -47,17 +48,21 @@ async function getProposals(
   }));
 
   const proposalsComputation = await evaluate(join([
-    selectedGovernanceContracts.map(contract => pull1({
-      allProposals: {
-        apiHost,
-        nodeHost,
-        nodeKey,
-        network,
-        contract,
-        quorum:      Constant.quorumVotes,
-        blockNumber: latestBlock.number,
-      },
-    })),
+    selectedGovernanceContracts
+      .filter(({ creation }) => {
+        return creation.block.number <= latestBlock.number;
+      })
+      .map(contract => pull1({
+        allProposals: {
+          apiHost,
+          nodeHost,
+          nodeKey,
+          network,
+          contract,
+          quorum:      Constant.quorumVotes,
+          blockNumber: latestBlock.number,
+        },
+      })),
     proposalsByContract => proposalsByContract.flat(),
   ]));
 

@@ -48,17 +48,20 @@ async function getHistory({ apiHost, nodeHost, nodeKey, network, contract }: Gov
     }),
     // Get all governance proposals that have been created
     join([
-      governorContracts.map(governorContract => pull1({
-        allProposals: {
-          apiHost,
-          nodeHost,
-          nodeKey,
-          network,
-          contract: governorContract,
-          quorum:      Constant.quorumVotes,
-          blockNumber: latestBlock.number,
-        },
-      })),
+      governorContracts
+        .filter(({ creation }) => {
+          return creation.block.number <= latestBlock.number;
+        }).map(governorContract => pull1({
+          allProposals: {
+            apiHost,
+            nodeHost,
+            nodeKey,
+            network,
+            contract: governorContract,
+            quorum:      Constant.quorumVotes,
+            blockNumber: latestBlock.number,
+          },
+        })),
       proposalsByContract => proposalsByContract.flat(),
     ]),
     join([

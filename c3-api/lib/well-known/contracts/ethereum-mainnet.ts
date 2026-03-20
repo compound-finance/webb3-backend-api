@@ -1200,6 +1200,16 @@ const GovernorBravo = UntypedContract("GovernorBravo", <const>{
     timestamp: 1615316879,
   },
 });
+const GovernorCharlie = UntypedContract("GovernorCharlie", <const>{
+  aliases: ["default"],
+  // location
+  network: "ethereum-mainnet",
+  address: "0x309a862bbC1A00e45506cB8A802D1ff10004c8C0",
+  block: {
+    number: 21688680,
+    timestamp: 1737653243,
+  },
+});
 const CrowdProposalFactory = UntypedContract("CrowdProposalFactory", <const>{
   aliases: ["default"],
   // location
@@ -1224,6 +1234,7 @@ const governance = <const>[
   Timelock,
   GovernorAlpha,
   GovernorBravo,
+  GovernorCharlie,
   CrowdProposalFactory,
   CommunityMultiSig,
 ];
