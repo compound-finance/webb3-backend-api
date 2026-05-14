@@ -37,6 +37,8 @@
     "test": "npm run test:tap",
     "test:tap": "npx tap --no-coverage --timeout=900 --test-regex='dist/tests/.*\\.test\\.js'",
     "build": "npx tsc",
-    "start": "wrangler dev --local entrypoint.ts"
+    "start": "wrangler dev --local entrypoint.ts",
+    "deploy:stage": "npx wrangler publish --env stage",
+    "deploy:production": "npx wrangler publish --env production"
   }
 }
